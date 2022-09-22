@@ -18,6 +18,10 @@
   background-color: white;
   box-shadow: 0px 0px 30px -9px gray;
 
+  @media (max-width: 600px) {
+    max-width: 350px;
+  }
+
   &-heading {
     padding-bottom: 10px;
   }
@@ -46,12 +50,14 @@
 
     border: none;
     border-radius: 5px;
-
+    transition: all 0.2s linear;
     color: white;
-    background-image: linear-gradient(315deg, #08e1ae 0%, #98de5b 74%);
-
-    &:hover {
+    background-color: #b9bec0;
+    &.isActive{
+      background-image: linear-gradient(315deg, #08e1ae 0%, #98de5b 74%);
+      &:hover {
       opacity: 0.8;
+    }
     }
   }
 
@@ -98,7 +104,6 @@
   width: 800px;
   margin: auto;
   border-radius: 10px;
-
   position: fixed;
   top: 40%;
   left: 50%;
@@ -106,7 +111,15 @@
   opacity: 0;
   visibility: hidden;
   box-shadow: rgb(177, 168, 168) 0px 18px 34px -1px;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.3s ease-in-out;
+
+  @media (max-width : 815px) {
+    width: 600px;
+  }
+
+  @media (max-width : 600px) {
+    width: 300px;
+  }
   
 
   &.show {
@@ -119,6 +132,7 @@
 .modal-header {
   padding: 50px 0;
   border-radius: 10px 10px 0 0;
+  color: white;
   background: radial-gradient(
     circle farthest-corner at 10% 20%,
     rgba(255, 247, 153, 1) 0%,
@@ -127,15 +141,7 @@
 
   .modal-logo {
     font-size: 10rem;
-    color: white;
   }
-}
-
-.modal-body {
-  padding: 30px 0;
-  border-radius: 0 0 10px 10px;
-  background-color: rgb(105, 147, 179);
-  color: white;
 
   .modal-close {
     position: absolute;
@@ -144,4 +150,26 @@
     font-size: 30px;
     cursor: pointer;
   }
+}
+
+.modal-body {
+  padding: 30px 0;
+  border-radius: 0 0 10px 10px;
+  background-color: rgb(105, 147, 179);
+  color: white;  
+}
+
+.login{
+  text-decoration: none;
+  padding: 5px 10px;
+  color: white;
+  border-radius: 5px;
+  border: 2px solid #087ab0;
+  background-color: #087ab0;
+  box-shadow: rgb(177, 168, 168) 0px 18px 34px -1px;
+
+  &:hover{
+    opacity: 0.8;
+  }
+ 
 }

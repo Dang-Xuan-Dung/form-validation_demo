@@ -1,19 +1,54 @@
+const $ = document.querySelector.bind(document);
+
 Validator("#form-1");
 
-const modal = document.querySelector(".modal");
-const modalClose = document.querySelector(".modal-close");
+//? Handle Modal
+const modal = $(".modal");
+const modalClose = $(".modal-close");
 modalClose.onclick = function () {
   modal.classList.remove("show");
 };
+
 window.addEventListener("click", function (e) {
   if (!modal.contains(e.target) && !e.target.matches(".form-submit")) {
     modal.classList.remove("show");
   }
 });
 
+//? Handle Validate Form
+
 function Validator(form) {
-  const formElement = document.querySelector(form);
+  const formElement = $(form);
+  const $$form = formElement.querySelector.bind(formElement);
   const inputList = formElement.querySelectorAll("input");
+
+  //? Handle disabled submit
+
+  setInterval(function () {
+    checkSubmit();
+  }, 0);
+  let isValid = true;
+
+  function checkSubmit() {
+    var passValue = $$form("#password").value.trim();
+    var confirmPassValue = $$form("#password_confirm").value.trim();
+
+    inputList.forEach(function (input) {
+      if (
+        input.value === "" ||
+        getParent(input).classList.contains("invalid") ||
+        passValue !== confirmPassValue
+      ) {
+        isValid = false;
+        submitBtn.setAttribute("disabled", "true");
+        submitBtn.classList.remove("isActive");
+      } else isValid = true;
+    });
+    if (isValid === true) {
+      submitBtn.removeAttribute("disabled");
+      submitBtn.classList.add("isActive");
+    }
+  }
 
   inputList.forEach(function (inputElement) {
     inputElement.onblur = function () {
@@ -24,24 +59,19 @@ function Validator(form) {
     };
   });
 
-  var signupBtn = formElement.querySelector(".form-submit");
-  signupBtn.onclick = function (e) {
-    let isValid;
-    inputList.forEach(function (input) {
-      isValid = checkBlur(input);
-    });
-    if (isValid === false) e.preventDefault();
-    else {
-      modal.classList.add("show");
-      e.preventDefault();
-    }
+  const submitBtn = $$form(".form-submit");
+  submitBtn.onclick = function (e) {
+    e.preventDefault();
+    modal.classList.add("show");
   };
 
+  //? Handle Blur
+
   function checkBlur(inputElement) {
-    const nameValue = formElement.querySelector("#fullname").value.trim();
-    const emailValue = formElement.querySelector("#email").value.trim();
-    const passValue = formElement.querySelector("#password").value.trim();
-    const confirmPassValue = formElement.querySelector("#password_confirmation").value.trim();
+    const nameValue = getValueById("#fullname");
+    const emailValue = getValueById("#email");
+    const passValue = getValueById("#password");
+    const confirmPassValue = getValueById("#password_confirm");
     let message = "";
 
     if (inputElement.value.trim() === "") {
@@ -56,6 +86,7 @@ function Validator(form) {
         return false;
       }
     }
+
     const formatEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (inputElement.name === "email") {
       if (!formatEmail.test(emailValue)) {
@@ -74,26 +105,33 @@ function Validator(form) {
         return false;
       }
     }
-    if (inputElement.name === "password_confirmation") {
+    if (inputElement.name === "password_confirm") {
       if (confirmPassValue !== passValue) {
         message = "The password and confirm password don't match";
         errorMessage(inputElement, message);
         return false;
       }
     }
+
+    function getValueById(inputElement) {
+      return $$form(inputElement).value.trim();
+    }
   }
 }
 
+//? Handle Focus
 function checkFocus(inputElement) {
   getParent(inputElement).classList.remove("invalid");
-  getParent(inputElement).querySelector(".form-message").innerHTML = "";
+  getParent(inputElement, ".form-message").innerHTML = "";
 }
 
 function errorMessage(inputElement, message) {
   getParent(inputElement).classList.add("invalid");
-  getParent(inputElement).querySelector(".form-message").innerHTML =
+  getParent(inputElement, ".form-message").innerHTML =
     message || "This field is required";
 }
-function getParent(element) {
-  return element.parentElement;
+
+function getParent(element, target = null) {
+  const parent = element.parentElement;
+  return target ? parent.querySelector(target) : parent;
 }
